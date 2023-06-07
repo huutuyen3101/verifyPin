@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo sản phẩm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="url"],
+        input[type="Date of manufacture"],
+        input[type="Expiry date"],
+        input[type="Fertilizer type"],
+        input[type="Name product"],
+        input[type="Ingredient"],
+        input[type="d"],
+        input[type="serialnumber"] {
+            width: 90%;
+            padding: 10px;
+            margin-left: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+
+    <!-- Nhúng thư viện CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
+</head>
+
+
+<body>
+
+    <button onclick="goBack()">Back</button>
+
+    <script>
+    function goBack() {
+      window.history.back();
+    }
+    </script>
+
+    <div class="container">
+        <h2>Log</h2>
+        <form>
+
+            <input type="url" id="url" name="url" placeholder="URL">
+            <input type="Name product" id="Name product"  name="Name product" placeholder="Name product">
+            <input type="Date of manufacture" id="Date of manufacture"  name="Date of manufacture" placeholder="Date of manufacture">
+            <input type="Expiry date" id="Expiry date"  name="Expiry date" placeholder="Expiry date">
+            <input type="Fertilizer type" id="Fertilizer type"  name="Fertilizer type" placeholder="Fertilizer type">
+            <input type="Ingredient" id="Ingredient"  name="Ingredient" placeholder="Ingredient">
+            <input type="d" id="Discreption"  name="Discreption" placeholder="Discreption">
+
+            <input type="button" id="login" name="login" value="Log">
+
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDS_5g30etf2QYhtJIwHbdXjOB3SmpLdow",
+            authDomain: "qrcode-82a31.firebaseapp.com",
+            projectId: "qrcode-82a31",
+            storageBucket: "qrcode-82a31.appspot.com",
+            messagingSenderId: "224703726570",
+            appId: "1:224703726570:web:defa8a108ec8caeef3a893",
+            measurementId: "G-SDN11CXXK1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Hàm tạo số ngẫu nhiên từ 0 đến max (bao gồm cả max)
+        function generateRandomNumber(max) {
+        return Math.floor(Math.random() * (max + 1));
+        }
+
+        // Hàm tạo số ngẫu nhiên có độ dài length
+        function generateRandomNumberWithLength(length) {
+        var randomNumber = '';
+        for (var i = 0; i < length; i++) {
+            randomNumber += generateRandomNumber(9);
+        }
+        return randomNumber;
+        }
+
+        // Hàm tạo ký tự chữ ngẫu nhiên
+        function generateRandomLetter() {
+        var letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var randomIndex = generateRandomNumber(51);
+        return letters.charAt(randomIndex);
+        }
+
+        // Hàm tạo mã PIN có 6 số
+        function generateRandomPIN() {
+        return generateRandomNumberWithLength(6);
+        }
+
+        // Hàm tạo số serial có 10 ký tự bao gồm cả chữ
+        function generateRandomSerialNumber() {
+        var serialNumber = '';
+        for (var i = 0; i < 10; i++) {
+            if (i % 2 === 0) {
+            serialNumber += generateRandomNumber(9);
+            } else {
+            serialNumber += generateRandomLetter();
+            }
+        }
+        return serialNumber;
+        }
+
+        // Sử dụng hàm tạo số serial và mã PIN
+        var randomSerialNumber = generateRandomSerialNumber();
+        var randomPIN = generateRandomPIN();
+
+        login.addEventListener('click', (e) => {
+            var qrCodeUrl = document.getElementById('url').value;
+            var serialNumber = randomSerialNumber;
+            var pinCode = randomPIN;
+            
+            var  nameProduct = document.getElementById('Name product').value;
+            var  dateManu = document.getElementById('Date of manufacture').value;
+            var  exDay = document.getElementById('Expiry date').value;
+            var  ferType = document.getElementById('Fertilizer type').value;
+            var  ingerdient = document.getElementById('Ingredient').value;
+            var  discreption = document.getElementById('Discreption').value;
+
+            // Khóa mã hóa (128-bit)
+            var key = CryptoJS.enc.Hex.parse('2b7e151628aed2a6abf7158809cf4f3c');
+
+            // Vectơ khởi tạo (128-bit)
+            var iv = CryptoJS.enc.Hex.parse('000102030405060708090a0b0c0d0e0f');
+
+            // Chuỗi để mã hóa
+            var plaintext = qrCodeUrl+','+ serialNumber +','+ pinCode;
+
+            // Mã hóa
+            var ciphertext = CryptoJS.AES.encrypt(plaintext, key, {
+                iv: iv,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
+            });
+
+            // Chuyển đổi chuỗi đã mã hóa thành dạng Base64
+            var encryptedText = ciphertext.toString();
+
+            // Giải mã
+            var decryptedBytes = CryptoJS.AES.decrypt(encryptedText, key, {
+                iv: iv,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
+            });
+
+            // Chuyển đổi dữ liệu đã giải mã thành chuỗi
+            var decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+
+            // In kết quả giải mã
+            set(ref(database, 'products/' + serialNumber),{
+                        SDK: encryptedText,
+                        NameProduct: nameProduct,
+                        DateManufacture: dateManu,
+                        ExDay: exDay,
+                        FerType: ferType,
+                        Ingerdient: ingerdient,
+                        Discreption: discreption
+                    })
+                    .then(() => {
+                        alert('Sản phẩm đã được tạo!');
+                    })
+                    .catch((error) => {
+                        alert('Lỗi khi lưu thông tin sản phẩm vào Firebase: ' + error.message);
+                    });
+
+            alert('encryptedText: ' + encryptedText +' decryptedText: '+ decryptedText);
+            alert('randomSerialNumber: ' + randomSerialNumber +' randomPIN: '+ randomPIN);
+        });          
+    </script>
+</body>
+</html>

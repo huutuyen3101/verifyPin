@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trang Đăng ký</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin-left: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+    
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Đăng kí</h2>
+        <form id="signup-form">
+            <input type="text" id="username" name="username" placeholder="Tên người dùng">
+            <input type="password" id="password" name="password" placeholder="Mật khẩu">
+            <input type="email" id="email" name="email" placeholder="Email">
+            <input type="tel" id="phone" name="phone" placeholder="Số điện thoại">
+            <input type="button" id="signUp" name="signup_submit" value="Đăng kí">
+        </form>
+        <p class="message">Trở về đăng nhập: <a href="index.html">Đăng nhập</a></p>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDS_5g30etf2QYhtJIwHbdXjOB3SmpLdow",
+        authDomain: "qrcode-82a31.firebaseapp.com",
+        databaseURL: "https://qrcode-82a31-default-rtdb.firebaseio.com",
+        projectId: "qrcode-82a31",
+        storageBucket: "qrcode-82a31.appspot.com",
+        messagingSenderId: "224703726570",
+        appId: "1:224703726570:web:defa8a108ec8caeef3a893",
+        measurementId: "G-SDN11CXXK1"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth();
+      
+        signUp.addEventListener('click',(e)=>{
+      
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var username = document.getElementById('username').value;
+            var phone = document.getElementById('phone').value;
+      
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+      
+                    set(ref(database, 'users/' + user.uid), {
+                        username: username,
+                        email: email,
+                        password: password,
+                        phone: phone
+                    })
+                    .then(() => {
+                        alert('Người dùng đã được tạo!');
+                    })
+                    .catch((error) => {
+                        alert('Lỗi khi lưu thông tin người dùng vào Firebase: ' + error.message);
+                    });
+                })
+                .catch((error) => {
+                    alert('Lỗi khi đăng ký: ' + error.message);
+                });
+        });
+    </script>
+</body>
+</html>
+

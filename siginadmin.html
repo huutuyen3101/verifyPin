@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Đăng nhập</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin-left: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+    
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+
+    <div class="container">
+        <h2>Đăng nhập</h2>
+        <form>
+            <input type="email" id="email" name="email" placeholder="Email">
+            <input type="password" id="password"  name="password" placeholder="Mật khẩu">
+            <input type="button" id="login" name="login" value="Đăng nhập">
+
+    
+            
+        </form>
+        <!-- <p class="message">Chưa có tài khoản? 
+            <a href="sigup.html">Đăng ký</a>
+            <a href="forget.html">Quên mật khẩu</a>
+        </p> -->
+    </div>
+</body>
+
+
+<script type="module">
+    login.addEventListener('click',(e)=>{
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+         if(email == '123' && password == '123'){
+          window.location.href = "admin.html";
+          }
+    });
+  </script>
+</html>

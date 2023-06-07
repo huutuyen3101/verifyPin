@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Đăng nhập</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin-left: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin-left: 0px;
+            margin-bottom: 15px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+
+    <div class="container">
+        <h2>Đăng nhập</h2>
+        <form>
+            <input type="email" id="email" name="email" placeholder="Email">
+            <input type="password" id="password"  name="password" placeholder="Mật khẩu">
+            <input type="button" id="login" name="login" value="Đăng nhập">
+            <input type="button" id="admin" name="admin" value="Login Admin">
+
+        </form>
+        <p class="message">Chưa có tài khoản? 
+            <a href="sigup.html">Đăng ký</a>
+            <a href="forget.html">Quên mật khẩu</a>
+        </p>
+    </div>
+</body>
+
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getDatabase, ref, update  } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+            apiKey: "AIzaSyDS_5g30etf2QYhtJIwHbdXjOB3SmpLdow",
+            authDomain: "qrcode-82a31.firebaseapp.com",
+            projectId: "qrcode-82a31",
+            storageBucket: "qrcode-82a31.appspot.com",
+            messagingSenderId: "224703726570",
+            appId: "1:224703726570:web:defa8a108ec8caeef3a893",
+            measurementId: "G-SDN11CXXK1"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth();
+    admin.addEventListener('click',(e)=>{
+        window.location.href = "siginadmin.html";
+    });
+    login.addEventListener('click',(e)=>{
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+
+        signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    const dt = new Date();
+                    update(ref(database, 'users/' + user.uid),{
+                        last_login : dt,
+                    })
+                    .then(() => {
+                        alert('Đăng nhập thành công !');
+                        window.location.href = "inputpin.html";
+                    });
+                })
+                .catch((error) => {
+                    alert('Lỗi khi đăng nhập: ' + error.message);
+                });
+            });
+  </script>
+</html>
