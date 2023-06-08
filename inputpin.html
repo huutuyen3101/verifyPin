@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
         }
-
+        
         .container {
             max-width: 400px;
             margin: 0 auto;
@@ -56,21 +56,24 @@
 </head>
 <body>
     <div class="container">
+        
+        <button onclick="goBack()">Back</button>
+    <script>
+    function goBack() {
+      window.history.back();
+    }
+    </script>
+        
         <h2>Input Pincode</h2>
         <form>
-            <input type="cerialnumber" id="cerialnumber" name="cerialnumber" placeholder="Cerialnumber">
+            <input type="cerialnumber" id="cerialnumber" name="cerialnumber" placeholder="Serialnumber">
             <input type="pincode" id="pincode" name="pincode" placeholder="Pincode">
             <input type="button" id="login" name="login" value="OK">
         </form>
  
     </div>
 </body>
-<button onclick="goBack()">Back</button>
-<script>
-    function goBack() {
-      window.history.back();
-    }
-    </script>
+
 
 <script type="module">
     // Import the functions you need from the SDKs you need
