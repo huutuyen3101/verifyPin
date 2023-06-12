@@ -108,12 +108,14 @@
                 .then((userCredential) => {
                     const user = userCredential.user;
                     const dt = new Date();
+
                     update(ref(database, 'users/' + user.uid),{
                         last_login : dt,
                     })
                     .then(() => {
                         alert('Đăng nhập thành công !');
-                        window.location.href = "inputpin.html";
+                        const url1 = `inputpin.html?uid=${encodeURIComponent(user.uid)}`;
+                        window.location.href = url1;
                     });
                 })
                 .catch((error) => {

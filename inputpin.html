@@ -78,7 +78,7 @@
 <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, child, get  } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    import { getDatabase, ref, child, get ,update} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
   
@@ -98,7 +98,8 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     const dbRef = ref(getDatabase());
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const uid = urlParams.get('uid');
 
     login.addEventListener('click',(e)=>{
         var pincode = document.getElementById('pincode').value;
@@ -123,22 +124,46 @@
         // Chuyển đổi chuỗi đã mã hóa thành dạng Base64
         var encryptedText = ciphertext.toString();
 
-        get(child(dbRef, 'products/'+cerialnumber)).then((snapshot) => {
-        if (snapshot.exists()) {
-            var productData = snapshot.val();
-            if(encryptedText == productData.SDK)
+
+        get(child(dbRef,'users/'+uid)).then((snapshot)=>{
+            if(snapshot.exists())
             {
-                const url = `product.html?serialnumber=${encodeURIComponent(cerialnumber)}`;
-                window.location.href = url;                
-            }else{
+                var user = snapshot.val();
+                var list = user.list_product;
+                get(child(dbRef, 'products/'+cerialnumber)).then((snapshot1) => {
+                if (snapshot1.exists()) {
+                    var productData = snapshot1.val();
+                    for(var i of list)
+                    {
+                        if(encryptedText == productData.SDK && encryptedText != i && i != 'null')
+                        {   
+                            list.push(productData.SDK);
+                            var scores = user.scores + 10;
+                            update(child(dbRef, 'users/' + uid),{
+                                    list_product : list,
+                                    scores : scores
+                            }).then(() => {
+                                        alert('Bạn được thưởng 10 điểm !');
+                                        const url = `product.html?serialnumber=${encodeURIComponent(cerialnumber)}`;
+                                        window.location.href = url;
+                            });
 
-                alert("Không tìm thấy sản phẩm")
-            }
-        }else {
-            alert("Không tìm thấy sản phẩm")
+                        }else if(encryptedText == i){
+                            alert("Sản phẩm đã được nhập");
+                            break;
+                        }else if(encryptedText != productData.SDK)
+                        {
+                            alert('Không tìm thấy sản phẩm !');
+                            break;
+                        }
+                    }
+                }
+                }).catch((error) => {
+
+                    console.error(error);
+                });
         }
-        }).catch((error) => {
-
+        }).catch((error)=>{
             console.error(error);
         });
     });

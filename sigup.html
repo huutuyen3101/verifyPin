@@ -94,6 +94,9 @@
             var password = document.getElementById('password').value;
             var username = document.getElementById('username').value;
             var phone = document.getElementById('phone').value;
+            var list_product = new Array();
+            list_product.push("null")
+            var scores = 0
       
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
@@ -103,7 +106,9 @@
                         username: username,
                         email: email,
                         password: password,
-                        phone: phone
+                        phone: phone,
+                        list_product: list_product,
+                        scores: scores
                     })
                     .then(() => {
                         alert('Người dùng đã được tạo!');
