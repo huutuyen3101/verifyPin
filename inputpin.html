@@ -133,24 +133,25 @@
                 get(child(dbRef, 'products/'+cerialnumber)).then((snapshot1) => {
                 if (snapshot1.exists()) {
                     var productData = snapshot1.val();
-                    for(var i of list)
+                    var check  = list.includes(encryptedText);
+                    if(productData.SDK != encryptedText)
                     {
-                        if(encryptedText == productData.SDK && encryptedText != i && i != 'null')
-                        {   
+                        alert('Không tìm thấy sản phẩm');
+                    }else{
+                        if(!check)
+                        {
                             list.push(productData.SDK);
                             var scores = user.scores + 10;
                             update(child(dbRef, 'users/' + uid),{
                                     list_product : list,
-                                    scores : scores
+                                        scores : scores
                             }).then(() => {
-                                        alert('Bạn được thưởng 10 điểm !');
-                                        const url = `product.html?serialnumber=${encodeURIComponent(cerialnumber)}`;
-                                        window.location.href = url;
+                                    alert('Bạn được thưởng 10 điểm !');
+                                    const url = `product.html?serialnumber=${encodeURIComponent(cerialnumber)}`;
+                                    window.location.href = url;
                             });
-
-                        }else if(encryptedText == i){
-                            alert("Sản phẩm đã được nhập");
-                            break;
+                        }else{
+                            alert('Sản phẩm đã được nhập');
                         }
                     }
                 }
