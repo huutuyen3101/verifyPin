@@ -147,12 +147,12 @@
                                         scores : scores
                             }).then(() => {
                                     alert('Bạn được thưởng 10 điểm !');
-                                    const url = `product.html?serialnumber=${encodeURIComponent(cerialnumber)}`;
-                                    window.location.href = url;
                             });
                         }else{
                             alert('Sản phẩm đã được nhập');
                         }
+                          const url = `product.html?serialnumber=${encodeURIComponent(cerialnumber)}`;
+                          window.location.href = url;
                     }
                 }
                 }).catch((error) => {
