@@ -142,11 +142,10 @@
                         {
                             list.push(productData.SDK);
                             var scores = user.scores + 10;
+                             alert('Bạn được thưởng 10 điểm !');
                             update(child(dbRef, 'users/' + uid),{
                                     list_product : list,
                                         scores : scores
-                            }).then(() => {
-                                    alert('Bạn được thưởng 10 điểm !');
                             });
                         }else{
                             alert('Sản phẩm đã được nhập');
